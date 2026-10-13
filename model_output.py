@@ -18,10 +18,6 @@ from keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-# To run pixi
-# /software/mm24721/jet_tagger_BSc/.pixi/envs/default/bin/python model_output.py
-# To verify running pixi
-# /software/mm24721/jet_tagger_BSc/.pixi/envs/default/bin/python -c "import numpy; print(numpy.__version__)"
 
 #functions for plotting
 style.set_style()
@@ -182,3 +178,7 @@ y_pred = model_outputs
 ROC_dict = ROC(y_pred, y_test, class_labels, plot_dir,ROC_dict)
 confusion(y_pred, y_test, class_labels, plot_dir)
 plot_shaply(model, X_test, class_labels, input_vars, plot_dir)
+print('done!')
+
+# To run code on pixi
+# /software/mm24721/jet_tagger_BSc/.pixi/envs/default/bin/python model_output.py
