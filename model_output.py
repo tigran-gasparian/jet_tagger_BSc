@@ -1,8 +1,8 @@
 import os, shutil, json
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
-from schema import Schema, And, Use, Optional
+#from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+#from schema import Schema, And, Use, Optional
 import shap
 from tensorflow.keras.models import load_model
 from sklearn.metrics import roc_curve, auc
@@ -11,10 +11,10 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import mplhep as hep
 import plot.style as style
-import collections
-import keras
-from keras.layers import BatchNormalization,  Activation, AveragePooling1D, Dense, Conv1D, Flatten
-from keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
+#import collections
+#import keras
+#from keras.layers import BatchNormalization,  Activation, AveragePooling1D, Dense, Conv1D, Flatten
+#from keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -111,7 +111,6 @@ def shapPlot(shap_values, feature_names, class_names):
     feature_inds = feature_order
     y_pos = np.arange(len(feature_inds))
     left_pos = np.zeros(len(feature_inds))
-
     axis_color="#333333"
     class_inds = np.argsort([-np.abs(shap_values[i]).mean() for i in range(len(shap_values))])
     colormap = matplotlib.colormaps['Set1'].resampled(len(class_names))  # Use 'tab10' with enough colors
@@ -143,17 +142,22 @@ def plot_shaply(model, X_test, class_labels, input_vars, plot_dir):
     labels = list(class_labels.keys())
     model2 = tf.keras.Model(model.input, model.output)
    
-
-    for explainer, name  in [(shap.GradientExplainer(model2, X_test[:1000]), "GradientExplainer"), ]:
+    for explainer, name  in [(shap.GradientExplainer(model2, X_test[:100]), "GradientExplainer"), ]:
         print("... {0}: explainer.shap_values(X)".format(name))
-        shap_values = explainer.shap_values(X_test[:1000])
-        new = np.sum(shap_values, axis = 1)
+        #print(type(X_test[0,0,15]))
+        shap_values = explainer.shap_values(X_test[:100])  # X_test[:1000]
+        new = np.sum(shap_values, axis = 1)                # Sums all top particles of shap values
+        # 15 is for dxy
+        # print('shap values',shap_values.shape)
+        # print('new',new.shape)
+        # print('new',type(new))
         print("... shap summary_plot classification")
         plt.clf()
         new = np.transpose(new, (2,0,1))
         shapPlot(new, input_vars, labels)
-        plt.savefig(plot_dir+"/shap_summary_class.pdf",bbox_inches='tight')
-        plt.savefig(plot_dir+"/shap_summary_class.png",bbox_inches='tight')
+        #plt.savefig(plot_dir+"/shap_summary_class.pdf",bbox_inches='tight')
+        #plt.savefig(plot_dir+"/shap_summary_class.png",bbox_inches='tight')
+        plt.savefig(plot_dir+"/shap_test",bbox_inches='tight')
 
 #creating a directory to save the plots
 plot_dir = os.path.join("output", "plots/training")
@@ -169,16 +173,17 @@ ROC_dict = {class_label : 0 for class_label in class_labels}
 #load test data
 X_test = np.load(f"training_data_CMS/X_test.npy")
 y_test = np.load(f"training_data_CMS/y_test.npy")
-
-#load saved model
-model = load_model(f"output/model/saved_model.h5")
-model_outputs = model.predict(X_test)
-y_pred = model_outputs
- 
-ROC_dict = ROC(y_pred, y_test, class_labels, plot_dir,ROC_dict)
-confusion(y_pred, y_test, class_labels, plot_dir)
-plot_shaply(model, X_test, class_labels, input_vars, plot_dir)
-print('done!')
+print(type(X_test[1,1,15]))
+print(X_test[:,1,15])
+# #load saved model
+# model = load_model(f"output/model/saved_model.h5")
+# model_outputs = model.predict(X_test)
+# y_pred = model_outputs
+# print('model loaded')
+# #ROC_dict = ROC(y_pred, y_test, class_labels, plot_dir,ROC_dict)
+# #confusion(y_pred, y_test, class_labels, plot_dir)
+# plot_shaply(model, X_test, class_labels, input_vars, plot_dir)
+# print('done!')
 
 # To run code on pixi
 # /software/mm24721/jet_tagger_BSc/.pixi/envs/default/bin/python model_output.py
