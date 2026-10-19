@@ -1,5 +1,6 @@
 #Imports 
 
+print('running model_train.py...')
 import os, shutil, json
 import numpy as np
 import tensorflow as tf
@@ -77,7 +78,7 @@ def jet_tagger(input_shape,output_shape):
     jet_id = Dense(32, name='Dense_1' ,activation='relu')(main)
     jet_id = Dense(16, name='Dense_2' ,activation='relu')(jet_id)
     jet_id = Dense(8, name='Dense_3' )(jet_id)
-    jet_id = Activation('softmax', name='jet_id_output')(jet_id)
+    #jet_id = Activation('softmax', name='jet_id_output')(jet_id)
     jet_model = keras.Model(inputs = [inputs], outputs = [jet_id])
     return jet_model
 

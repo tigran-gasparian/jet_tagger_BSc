@@ -9,6 +9,12 @@ The model tries to assign a particle to one out of 8 labels
 16 most important particles - events or jets with <16 particles are padded with zeros
                             - events or jets with >16 particles are truncated to 16
 
+    shap_values
+    Shape: (1000, 16, 20, 8) (events, top particles, input vars, output vars)
+
+    new 
+    Shape: (1000, 20, 8)
+
     training_data_CMS/X_train.npy
     Shape: (14679587, 16, 20)  <--14679587 samples
     Data Type: float64,

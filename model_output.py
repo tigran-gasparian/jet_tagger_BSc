@@ -156,7 +156,7 @@ def plot_shaply(model, X_test, class_labels, input_vars, plot_dir):
         new = np.transpose(new, (2,0,1))
         shapPlot(new, input_vars, labels)
         #plt.savefig(plot_dir+"/shap_summary_class.pdf",bbox_inches='tight')
-        #plt.savefig(plot_dir+"/shap_summary_class.png",bbox_inches='tight')
+        #plt.savefig(plot_dir+"/shap_summary_class.png",bbox_inches='tight')   pt=[0]
         plt.savefig(plot_dir+"/shap_test",bbox_inches='tight')
 
 #creating a directory to save the plots
@@ -169,12 +169,17 @@ with open(f"training_data_CMS/class_label.json", 'r') as file: class_labels = js
 with open(f"training_data_CMS/input_vars.json", 'r') as file: input_vars = json.load(file)
 
 ROC_dict = {class_label : 0 for class_label in class_labels}
-
 #load test data
 X_test = np.load(f"training_data_CMS/X_test.npy")
 y_test = np.load(f"training_data_CMS/y_test.npy")
-print(type(X_test[1,1,15]))
-print(X_test[:,1,15])
+#print(type(X_test[1,1,0]))
+#fig,ax=plt.subplots()
+
+pt, counts = np.unique(X_test[:,1,0], return_counts=True)
+print(np.max(X_test[:,1,0]))
+plt.bar(pt,counts)
+plt.xlim(0,2)
+plt.savefig(plot_dir+"/pt_counts_test",bbox_inches='tight')
 # #load saved model
 # model = load_model(f"output/model/saved_model.h5")
 # model_outputs = model.predict(X_test)
